@@ -84,20 +84,61 @@ This boilerplate follows the Model-View-ViewModel pattern:
 ### Example Structure:
 ```typescript
 // Model: Type definitions and API calls
-type User = { id: string; name: string; email: string }
+export interface Example {
+  id: string;
+  name: string;
+  value: number;
+  createdAt: Date;
+}
+
+export interface CreateExampleRequest {
+  name: string;
+  value: number;
+}
 
 // ViewModel: Business logic and state management
-const useUserViewModel = () => {
-  const { data, isLoading } = useQuery('users', fetchUsers)
-  // ... business logic
-  return { users: data, isLoading, createUser, deleteUser }
-}
+export const useExampleViewModel = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["examples"],
+    queryFn: getExamples,
+  });
+  
+  const createMutation = useMutation({
+    mutationFn: (newExample: CreateExampleRequest) => createExample(newExample),
+  });
+
+  return {
+    examples: data || [],
+    isLoading,
+    createExample: createMutation.mutate,
+    isCreating: createMutation.isPending,
+  };
+};
 
 // View: React component
-const UserList = () => {
-  const { users, isLoading, createUser } = useUserViewModel()
-  // ... render logic
-}
+export const ExampleView = () => {
+  const { examples, isLoading, createExample, isCreating } = useExampleViewModel();
+  const [newExample, setNewExample] = useState({ name: "", value: 0 });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createExample(newExample);
+    setNewExample({ name: "", value: 0 });
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        {/* Form inputs */}
+      </form>
+      <ul>
+        {examples.map(example => (
+          <li key={example.id}>{example.name}: {example.value}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 ```
 
 ## 🔧 Configuration
