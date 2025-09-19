@@ -102,7 +102,7 @@ export const useExampleViewModel = () => {
     queryKey: ["examples"],
     queryFn: getExamples,
   });
-  
+
   const createMutation = useMutation({
     mutationFn: (newExample: CreateExampleRequest) => createExample(newExample),
   });
@@ -208,10 +208,6 @@ Strict TypeScript configuration in `tsconfig.json` for maximum type safety.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
